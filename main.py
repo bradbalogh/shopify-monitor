@@ -1,6 +1,7 @@
 import json
 import requests
 import time
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 
 def testMonitor(shop_name):
@@ -51,16 +52,26 @@ def newProductFound(product_data, shop_name):
 
     # parse variant data
     variants = product_data['variants']
-    print('$'+variants[0]['price'])
+    price = ('$'+variants[0]['price'])
+    sizes = {}
     for variant in variants:
         variant_size = variant['title']
         variant_id = variant['id']
-        print(f'[{variant_size}] {variant_id}')
+        sizes[str(variant_size)] = variant_id
 
+    print(sizes)
 
-def sendNotification():
+    # /cart/add/id
+
     # send discord notification
-    print("Sending Notification")
+    webhook = DiscordWebhook(url='https://discord.com/api/webhooks/794705536783613992/RzttvPIL-mDCd00AUh7ArNTRrTCg20EmatzqIAoAFjMY1w1pjorNmapr5AVIng7UvxD2')
+    embed = DiscordEmbed(title=product_title, url=product_link, color=0x35e811)
+    embed.set_thumbnail(url=product_image)
+    embed.add_embed_field(name=price, value='---------', inline=False)
+    embed.add_embed_field(name=price, value='---------', inline=False)
+    embed.set_footer(text="CyberQuickTask")
+    webhook.add_embed(embed)
+    webhook.execute()
 
 
 
