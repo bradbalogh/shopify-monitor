@@ -2,6 +2,7 @@
 
 <ul>
 <li>This is a simple shopify monitor that I made in a couple hours</li>
+<li>The monitor currently only looks for new products loaded to the site and does not watch for restocks</li>
 <li>The notifications are sent to a discord server via user supplied webhook</li>
 <li>Feel free to make changes, as there is plenty of room for improvements</li>
 <li>The QuickTask is currently hardcoded for CyberAIO</li>
