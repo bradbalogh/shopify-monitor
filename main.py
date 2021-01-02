@@ -82,7 +82,6 @@ def newProductFound(product_data, shop_name, webhook_url):
 
     # build size string
     size_string = ''
-    odd_count = 1
     for i in range(len(sizes)):
         size = str(list(sizes.keys())[i])
         id = str(list(sizes.values())[i])
