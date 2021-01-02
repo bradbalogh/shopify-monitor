@@ -7,12 +7,11 @@ from datetime import datetime
 
 def testMonitor(shop_name):
 
-    resp = requests.request(
-        "GET", url=f'https://{shop_name}.com/products.json')
+    resp = requests.request("GET", url=f'https://{shop_name}.com/products.json')
     data = json.loads(resp.text)
     products = (data['products'])
 
-    newProductFound(products[3], shop_name)
+    newProductFound(products[0], shop_name)
 
 
 
@@ -29,11 +28,14 @@ def monitor(shop_name, refresh_delay):
     for product in products:
         links.append(product['handle'])
 
-    proxies=[]
     # load proxies.txt
     with open('proxies.txt', 'r') as f:
         proxies = [line.strip() for line in f]
     f.close()
+
+    # check to see if proxies.txt is empty
+    if len(proxies) == 0:
+        print("\n• Proxies are required to avoid shopify temp bans\n• Please add proxies to proxies.txt")
 
     proxy_counter = 0
     # monitor for new products
@@ -91,13 +93,14 @@ def newProductFound(product_data, shop_name):
     webhook = DiscordWebhook(url='https://discord.com/api/webhooks/794705536783613992/RzttvPIL-mDCd00AUh7ArNTRrTCg20EmatzqIAoAFjMY1w1pjorNmapr5AVIng7UvxD2')
     embed = DiscordEmbed(title=product_title, url=product_link, color=0x35e811)
     embed.set_thumbnail(url=product_image)
-    embed.add_embed_field(name=price, value=size_string, inline=False)
+    embed.add_embed_field(name=price, value=size_string, inline=True)
     embed.set_footer(text=f'shopify-{shop_name} | made by bard#1704')
     webhook.add_embed(embed)
     webhook.execute()
 
 
 # production function
+# Stores: prosperskateshop, kith, undefeated...
 monitor('prosperskateshop', 1)
 
 # test function
