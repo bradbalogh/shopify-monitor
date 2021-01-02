@@ -5,21 +5,21 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 from datetime import datetime
 
 
-def testMonitor(shop_name):
+def testMonitor(shop_name, webhook_url):
 
     resp = requests.request("GET", url=f'https://{shop_name}.com/products.json')
     data = json.loads(resp.text)
     products = (data['products'])
 
-    newProductFound(products[0], shop_name)
+    # Fetches most recently loaded product
+    newProductFound(products[0], shop_name, webhook_url)
 
 
 
-def monitor(shop_name, refresh_delay):
+def monitor(shop_name, refresh_delay, webhook_url):
     print(f'[{datetime.now().strftime("%H:%M:%S")}] Starting shopify-{shop_name} monitor | delay: {refresh_delay} second(s)...')
 
-    resp = requests.request(
-        "GET", url=f'https://{shop_name}.com/products.json')
+    resp = requests.request("GET", url=f'https://{shop_name}.com/products.json')
     data = json.loads(resp.text)
     products = (data['products'])
 
@@ -63,7 +63,7 @@ def monitor(shop_name, refresh_delay):
 
 
 
-def newProductFound(product_data, shop_name):
+def newProductFound(product_data, shop_name, webhook_url):
     # parse product data
     product_title = (product_data['title'])
     product_link = (f'https://{shop_name}.com/products/'+product_data['handle'])
@@ -90,7 +90,7 @@ def newProductFound(product_data, shop_name):
     size_string += f'\n[QuickTask](https://cybersole.io/dashboard/tasks?quicktask={product_link})'
         
     # send discord notification
-    webhook = DiscordWebhook(url='https://discord.com/api/webhooks/794705536783613992/RzttvPIL-mDCd00AUh7ArNTRrTCg20EmatzqIAoAFjMY1w1pjorNmapr5AVIng7UvxD2')
+    webhook = DiscordWebhook(url=webhook_url)
     embed = DiscordEmbed(title=product_title, url=product_link, color=0x35e811)
     embed.set_thumbnail(url=product_image)
     embed.add_embed_field(name=price, value=size_string, inline=True)
@@ -98,11 +98,14 @@ def newProductFound(product_data, shop_name):
     webhook.add_embed(embed)
     webhook.execute()
 
+print('--------------------------------------------------------')
+print('| Simple Shopify Monitor made by bard#1704 | @iEatShoe |')
+print('--------------------------------------------------------')
 
 # production function
-# Stores: prosperskateshop, kith, undefeated...
-monitor('prosperskateshop', 1)
+# Stores:  kith, bdgastore, shopnicekicks, undefeated...
+#monitor('undefeated', 1, '<PASTE_WEBHOOK_HERE>')
 
 # test function
-#testMonitor('prosperskateshop')
+testMonitor('shopnicekicks', '<PASTE_WEBHOOK_HERE>')
 
