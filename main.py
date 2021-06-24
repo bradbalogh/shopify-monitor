@@ -50,7 +50,7 @@ def monitor(shop_name, refresh_delay, webhook_url):
 
         for product in products:
             if product['handle'] not in links:
-                newProductFound(product, shop_name)
+                newProductFound(product, shop_name, webhook_url)
                 links.append(product['handle'])
 
         time.sleep(refresh_delay)
